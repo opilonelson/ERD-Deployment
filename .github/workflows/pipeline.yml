@@ -20,7 +20,7 @@ jobs:
       - name: List directory contents
         run: |
           echo "Listing contents of the directory:"
-          ls -l ./fineract-provider/build/libs/
+          ls -al
 
       - name: Get Shortened Commit SHA
         id: shortened_sha
