@@ -21,6 +21,7 @@ jobs:
         run: |
           echo "Listing contents of the directory:"
           ls -al
+          git status
 
       - name: Get Shortened Commit SHA
         id: shortened_sha
