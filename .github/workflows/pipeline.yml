@@ -1,0 +1,30 @@
+name: Odoo QA Deployment Client Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+
+      - uses: actions/checkout@v2
+
+      - name: List directory contents
+        run: |
+          echo "Listing contents of the directory:"
+          ls -l ./fineract-provider/build/libs/
+
+      - name: Get Shortened Commit SHA
+        id: shortened_sha
+        run: |
+          FULL_SHA=$GITHUB_SHA
+          SHORTENED_SHA=${FULL_SHA:0:8}
+          echo "::set-output name=shortened_sha::$SHORTENED_SHA"
