@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - inko
 
 jobs:
   build:
@@ -15,17 +15,30 @@ jobs:
         id: branch-name
         uses: tj-actions/branch-names@v6
 
-      - uses: actions/checkout@v2
-
-      - name: List directory contents
+      - name: Set up SSH key
         run: |
-          echo "Listing contents of the directory:"
-          ls -al
-          git status
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+          chmod 400 key.pem
+        shell: bash
 
-      - name: Get Shortened Commit SHA
-        id: shortened_sha
+      - name: Deploy via SSH
         run: |
-          FULL_SHA=$GITHUB_SHA
-          SHORTENED_SHA=${FULL_SHA:0:8}
-          echo "::set-output name=shortened_sha::$SHORTENED_SHA"
+          echo "🚀 Deploying to ${{ github.event.inputs.environment }} environment"
+
+          ssh -i key.pem \
+              -p ${{ secrets.SSH_PORT }} \
+              -o StrictHostKeyChecking=no \
+              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+
+            echo "📁 Changing directory..."
+            cd /path/to/your/app
+
+            echo "⬇️ Pulling latest code..."
+            git pull
+
+            echo "🔄 Restarting systemd service..."
+            sudo systemctl restart myapp.service
+
+            echo "Deployment completed successfully"
+          EOF
+        shell: bash
