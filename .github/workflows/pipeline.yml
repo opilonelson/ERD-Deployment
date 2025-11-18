@@ -30,14 +30,15 @@ jobs:
               -o StrictHostKeyChecking=no \
               ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
 
-            echo "📁 Changing directory..."
-            cd /path/to/your/app
+            echo "Changing directory..."
+            cd /home/mifosdev/fineract
+            ls -l
 
-            echo "⬇️ Pulling latest code..."
-            git pull
+            #echo "Pulling latest code..."
+            #git pull
 
-            echo "🔄 Restarting systemd service..."
-            sudo systemctl restart myapp.service
+            #echo "🔄 Restarting systemd service..."
+            #sudo systemctl restart myapp.service
 
             echo "Deployment completed successfully"
           EOF
